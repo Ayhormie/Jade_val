@@ -2,14 +2,20 @@ import streamlit as st
 import random
 import time
 
-# Page config
+# Initialize session state
+if "predicted" not in st.session_state:
+    st.session_state.predicted = False
+
+if "accepted" not in st.session_state:
+    st.session_state.accepted = False
+
+
 st.set_page_config(
     page_title="Jadesola Valentine Model 💖",
     page_icon="💘",
     layout="centered"
 )
 
-# Title
 st.title("💘 Jadesola Valentine Acceptance Model")
 st.caption("Built by a Data Scientist who already knows the answer 😌")
 
@@ -24,13 +30,12 @@ This predictive model was trained on:
 
 st.divider()
 
-# Input features
 st.subheader("📊 Input Features")
 
-affection = st.slider("Affection Level", 0, 100, 97)
-laughter = st.slider("Laughs at my jokes (%)", 0, 100, 99)
-trust = st.slider("Trust Level", 0, 100, 100)
-vibes = st.selectbox(
+st.slider("Affection Level", 0, 100, 97)
+st.slider("Laughs at my jokes (%)", 0, 100, 99)
+st.slider("Trust Level", 0, 100, 100)
+st.selectbox(
     "Overall Relationship Vibe",
     ["Immaculate ✨", "Perfect 💕", "Unmatched 🔥"]
 )
@@ -42,28 +47,29 @@ if st.button("Run Valentine Prediction 🚀"):
     with st.spinner("Training deep emotional neural network..."):
         time.sleep(2)
 
+    st.session_state.predicted = True
+
+
+# Show prediction results
+if st.session_state.predicted:
     probability = round(random.uniform(0.97, 0.995), 3)
 
     st.success("🎉 MODEL OUTPUT")
     st.metric("Prediction", "YES 💖")
     st.metric("Confidence Score", f"{probability * 100}%")
 
-    st.balloons()
-
     st.markdown(
         """
         ### 🧠 Model Explanation (SHAP-ish 😏)
-        - High affection level ➜ strong positive weight  
-        - Constant laughter ➜ overfitting to happiness 😂  
-        - Trust score ➜ 100% reliable  
+        - High affection ➜ strong positive weight  
+        - Laughter ➜ overfitting to happiness 😂  
+        - Trust ➜ 100% reliable  
         - Vibes ➜ off the charts 🔥  
 
         **Conclusion:**  
         The model refuses to consider any other outcome.
         """
     )
-
-    st.divider()
 
     # Hidden message
     with st.expander("🔐 View Model Insights (Restricted)"):
@@ -80,10 +86,11 @@ if st.button("Run Valentine Prediction 🚀"):
             """
         )
 
-    # Final question
+    st.divider()
+
     st.markdown(
         """
-        ## 💖 Final Question
+        ## 💖 Final Question  
         **Jadesola, will you be my Valentine?**
         """
     )
@@ -92,24 +99,25 @@ if st.button("Run Valentine Prediction 🚀"):
 
     with col1:
         if st.button("YES 💘"):
-            st.success("🥰 Valentine confirmed! Model accuracy = 100%")
-
-            # Celebration animation ONLY on YES
-            st.balloons()
-            st.snow()
-
-            st.markdown(
-                """
-                ### 🎉 Model Update
-                - Status: **SUCCESS**
-                - Valentine secured 💖
-                - Next phase: *Dinner & memories* 🍽️✨  
-
-                💍 *Future version upgrade scheduled…*
-                """
-            )
+            st.session_state.accepted = True
 
     with col2:
-        if st.button("NO 😅"):
-            st.error("⚠️ Model anomaly detected")
-            st.info("🔁 Retraining model until YES is returned 😌")
+        st.button("NO 😅")
+
+
+# Celebration ONLY after YES
+if st.session_state.accepted:
+    st.success("🥰 Valentine confirmed! Model accuracy = 100%")
+    st.balloons()
+    st.snow()
+
+    st.markdown(
+        """
+        ### 🎉 Model Update
+        - Status: **SUCCESS**
+        - Valentine secured 💖
+        - Next phase: *Dinner & memories* 🍽️✨  
+
+        💍 *Future version upgrade scheduled…*
+        """
+    )
