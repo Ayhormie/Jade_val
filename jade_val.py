@@ -2,12 +2,14 @@ import streamlit as st
 import random
 import time
 
+# Page config
 st.set_page_config(
     page_title="Jadesola Valentine Model 💖",
     page_icon="💘",
     layout="centered"
 )
 
+# Title
 st.title("💘 Jadesola Valentine Acceptance Model")
 st.caption("Built by a Data Scientist who already knows the answer 😌")
 
@@ -22,6 +24,7 @@ This predictive model was trained on:
 
 st.divider()
 
+# Input features
 st.subheader("📊 Input Features")
 
 affection = st.slider("Affection Level", 0, 100, 97)
@@ -34,6 +37,7 @@ vibes = st.selectbox(
 
 st.divider()
 
+# Run prediction
 if st.button("Run Valentine Prediction 🚀"):
     with st.spinner("Training deep emotional neural network..."):
         time.sleep(2)
@@ -59,9 +63,9 @@ if st.button("Run Valentine Prediction 🚀"):
         """
     )
 
-        st.divider()
+    st.divider()
 
-    # Hidden message (revealed after prediction)
+    # Hidden message
     with st.expander("🔐 View Model Insights (Restricted)"):
         st.markdown(
             """
@@ -76,6 +80,7 @@ if st.button("Run Valentine Prediction 🚀"):
             """
         )
 
+    # Final question
     st.markdown(
         """
         ## 💖 Final Question
@@ -89,7 +94,7 @@ if st.button("Run Valentine Prediction 🚀"):
         if st.button("YES 💘"):
             st.success("🥰 Valentine confirmed! Model accuracy = 100%")
 
-            # Celebration animations ONLY on YES
+            # Celebration animation ONLY on YES
             st.balloons()
             st.snow()
 
@@ -98,7 +103,7 @@ if st.button("Run Valentine Prediction 🚀"):
                 ### 🎉 Model Update
                 - Status: **SUCCESS**
                 - Valentine secured 💖
-                - Next phase: *Dinner & memories* 🍽️✨
+                - Next phase: *Dinner & memories* 🍽️✨  
 
                 💍 *Future version upgrade scheduled…*
                 """
