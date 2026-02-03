@@ -1,8 +1,7 @@
 import streamlit as st
 import random
 import time
-from reportlab.lib.pagesizes import A4
-from reportlab.pdfgen import canvas
+import base64
 
 # ---------------- SESSION STATE ----------------
 if "predicted" not in st.session_state:
@@ -11,7 +10,6 @@ if "accepted" not in st.session_state:
     st.session_state.accepted = False
 if "letter_shown" not in st.session_state:
     st.session_state.letter_shown = False
-
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -100,6 +98,7 @@ if st.session_state.predicted:
     with col2:
         st.button("NO 😅")
 
+
 # ---------------- LOVE LETTER ANIMATION ----------------
 if st.session_state.letter_shown:
     st.success("🥰 Valentine confirmed!")
@@ -130,44 +129,22 @@ if st.session_state.letter_shown:
     st.divider()
 
     # ---------------- PDF CERTIFICATE ----------------
-    def generate_pdf():
-        file_name = "Valentine_Certificate_Jadesola.pdf"
-        c = canvas.Canvas(file_name, pagesize=A4)
-        width, height = A4
+    st.subheader("📄 Valentine Certificate")
 
-        c.setFont("Helvetica-Bold", 26)
-        c.drawCentredString(width / 2, height - 150, "💖 Valentine Certificate 💖")
+    certificate_text = f"""
+    💖 Valentine Certificate 💖
 
-        c.setFont("Helvetica", 16)
-        c.drawCentredString(width / 2, height - 260, "This certifies that")
+    This certifies that
 
-        c.setFont("Helvetica-Bold", 22)
-        c.drawCentredString(width / 2, height - 320, "JADESOLA")
+    JADESOLA
 
-        c.setFont("Helvetica", 16)
-        c.drawCentredString(
-            width / 2,
-            height - 380,
-            "has officially accepted to be my Valentine 💘"
-        )
+    has officially accepted to be my Valentine 💘
 
-        c.setFont("Helvetica-Oblique", 12)
-        c.drawCentredString(
-            width / 2,
-            height - 470,
-            "Issued with ❤️ by Ayomide (Data Scientist Edition)"
-        )
+    Issued with ❤️ by Ayomide (Data Scientist Edition)
+    """
 
-        c.showPage()
-        c.save()
-        return file_name
-
-    pdf_file = generate_pdf()
-
-    with open(pdf_file, "rb") as f:
-        st.download_button(
-            "📄 Download Valentine Certificate",
-            data=f,
-            file_name="Valentine_Certificate_Jadesola.pdf",
-            mime="application/pdf"
-        )
+    # Convert text to PDF-like download (as txt file for simplicity)
+    certificate_bytes = certificate_text.encode("utf-8")
+    b64 = base64.b64encode(certificate_bytes).decode()
+    href = f'<a href="data:file/txt;base64,{b64}" download="Valentine_Certificate_Jadesola.txt">📄 Download Valentine Certificate</a>'
+    st.markdown(href, unsafe_allow_html=True)
