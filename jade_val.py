@@ -59,12 +59,27 @@ if st.button("Run Valentine Prediction 🚀"):
         """
     )
 
-    st.divider()
+        st.divider()
+
+    # Hidden message (revealed after prediction)
+    with st.expander("🔐 View Model Insights (Restricted)"):
+        st.markdown(
+            """
+            💌 **Hidden Insight Detected**
+
+            Jadesola, beyond the data, models, and jokes…
+
+            You make things feel lighter, happier, and more meaningful.
+            This model was just an excuse to ask you properly 😌❤️
+
+            **No algorithm beats how I feel about you.**
+            """
+        )
 
     st.markdown(
         """
-        ## 💌 Final Question
-        **Jadesola, will you be my Valentine? 💖**
+        ## 💖 Final Question
+        **Jadesola, will you be my Valentine?**
         """
     )
 
@@ -73,7 +88,21 @@ if st.button("Run Valentine Prediction 🚀"):
     with col1:
         if st.button("YES 💘"):
             st.success("🥰 Valentine confirmed! Model accuracy = 100%")
-            st.markdown("💍 *Future version upgrade scheduled…*")
+
+            # Celebration animations ONLY on YES
+            st.balloons()
+            st.snow()
+
+            st.markdown(
+                """
+                ### 🎉 Model Update
+                - Status: **SUCCESS**
+                - Valentine secured 💖
+                - Next phase: *Dinner & memories* 🍽️✨
+
+                💍 *Future version upgrade scheduled…*
+                """
+            )
 
     with col2:
         if st.button("NO 😅"):
