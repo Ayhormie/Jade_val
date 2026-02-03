@@ -88,7 +88,7 @@ st.set_page_config(
 )
 
 st.title("💘 Jadesola Valentine Acceptance Model")
-st.caption("Built by a Data Scientist who already knows the answer 😌")
+st.caption("Built by your sweet man who already knows the answer 😌")
 st.write("""
 Welcome, **Jadesola** 👋  
 This model was trained on laughter, trust, vibes, and a ridiculous amount of affection 💕
