@@ -2,6 +2,10 @@ import streamlit as st
 import random
 import time
 import base64
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
 
 # ---------------- SESSION STATE ----------------
 if "predicted" not in st.session_state:
@@ -20,16 +24,15 @@ st.set_page_config(
 
 st.title("💘 Jadesola Valentine Acceptance Model")
 st.caption("Built by a Data Scientist who already knows the answer 😌")
-
 st.write("""
 Welcome, **Jadesola** 👋  
 This model was trained on laughter, trust, vibes, and a ridiculous amount of affection 💕
 """)
-
 st.divider()
 
 # ---------------- INPUT FEATURES ----------------
 st.subheader("📊 Input Features")
+
 st.slider("Affection Level", 0, 100, 97)
 st.slider("Laughs at my jokes (%)", 0, 100, 99)
 st.slider("Trust Level", 0, 100, 100)
@@ -46,7 +49,6 @@ if st.button("Run Valentine Prediction 🚀"):
 # ---------------- MODEL OUTPUT ----------------
 if st.session_state.predicted:
     probability = round(random.uniform(0.97, 0.995), 3)
-
     st.success("🎉 MODEL OUTPUT")
     st.metric("Prediction", "YES 💖")
     st.metric("Confidence Score", f"{probability * 100}%")
@@ -71,12 +73,11 @@ if st.session_state.predicted:
     if secret.lower() == "jadesola":
         st.success("Access granted 💘")
         st.markdown("""
-        💌 **Private Message**
+        💌 **Private Message**  
 
-        Jadesola, this isn’t about code, models, or predictions.
-
-        I genuinely enjoy you, admire you, and want to create beautiful memories with you.
-        This app is just my nerdy way of asking properly 😌❤️
+        Jadesola, this isn’t about code, models, or predictions.  
+        I genuinely enjoy you, admire you, and want to create beautiful memories with you.  
+        This app is just my nerdy way of asking properly 😌❤️  
 
         **You matter to me.**
         """)
@@ -87,23 +88,34 @@ if st.session_state.predicted:
 
     # ---------------- FINAL QUESTION ----------------
     st.markdown("## 💖 Jadesola, will you be my Valentine?")
-
     col1, col2 = st.columns(2)
-
     with col1:
         if st.button("YES 💘"):
             st.session_state.accepted = True
             st.session_state.letter_shown = True
-
     with col2:
         st.button("NO 😅")
 
-
-# ---------------- LOVE LETTER ANIMATION ----------------
+# ---------------- LOVE LETTER + CERTIFICATE + MUSIC ----------------
 if st.session_state.letter_shown:
     st.success("🥰 Valentine confirmed!")
     st.balloons()
     st.snow()
+
+    # ── Background Music (soft romantic piano — royalty-free) ────────────────────────────────
+    # Pixabay example — feel free to replace with your favorite direct mp3 link
+    # Autoplay may be blocked until user interacts (normal browser policy)
+    music_url = "https://cdn.pixabay.com/audio/2023/08/07/audio_3d0d6d6d1d.mp3"  # ← example soft romantic piano (replace if desired)
+
+    music_html = f"""
+    <audio autoplay loop style="display: none;">
+        <source src="{music_url}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    """
+    st.markdown(music_html, unsafe_allow_html=True)
+
+    st.caption("🎶 Soft romantic background playing... (click anywhere if it doesn't start)")
 
     st.subheader("💌 A Letter For You")
 
@@ -120,7 +132,6 @@ if st.session_state.letter_shown:
 
     placeholder = st.empty()
     displayed = ""
-
     for char in letter:
         displayed += char
         placeholder.markdown(f"```\n{displayed}\n```")
@@ -128,23 +139,63 @@ if st.session_state.letter_shown:
 
     st.divider()
 
-    # ---------------- PDF CERTIFICATE ----------------
+    # ── REAL PDF CERTIFICATE ───────────────────────────────────────────────────────────────
     st.subheader("📄 Valentine Certificate")
 
-    certificate_text = f"""
-    💖 Valentine Certificate 💖
+    # Generate PDF in memory
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter  # ~612 × 792 pt
 
-    This certifies that
+    # Light pink background
+    c.setFillColorRGB(1.0, 0.96, 0.98)
+    c.rect(0, 0, width, height, fill=1)
 
-    JADESOLA
+    # Title
+    c.setFillColorRGB(0.8, 0.1, 0.3)  # rose red
+    c.setFont("Helvetica-Bold", 36)
+    c.drawCentredString(width / 2, height - 1.5 * inch, "💖 Valentine Certificate 💖")
 
-    has officially accepted to be my Valentine 💘
+    # Content
+    c.setFillColorRGB(0.4, 0.4, 0.6)
+    c.setFont("Helvetica-Bold", 24)
+    c.drawCentredString(width / 2, height - 3 * inch, "This certifies that")
 
-    Issued with ❤️ by Ayomide (Data Scientist Edition)
-    """
+    c.setFillColorRGB(0.9, 0.2, 0.4)
+    c.setFont("Helvetica-Bold", 48)
+    c.drawCentredString(width / 2, height - 4.3 * inch, "JADESOLA")
 
-    # Convert text to PDF-like download (as txt file for simplicity)
-    certificate_bytes = certificate_text.encode("utf-8")
-    b64 = base64.b64encode(certificate_bytes).decode()
-    href = f'<a href="data:file/txt;base64,{b64}" download="Valentine_Certificate_Jadesola.txt">📄 Download Valentine Certificate</a>'
-    st.markdown(href, unsafe_allow_html=True)
+    c.setFillColorRGB(0.4, 0.4, 0.6)
+    c.setFont("Helvetica", 24)
+    c.drawCentredString(width / 2, height - 5.5 * inch, "has officially accepted to be")
+
+    c.setFillColorRGB(0.9, 0.2, 0.4)
+    c.setFont("Helvetica-Bold", 36)
+    c.drawCentredString(width / 2, height - 6.6 * inch, "My Valentine 💘")
+
+    c.setFillColorRGB(0.5, 0.5, 0.7)
+    c.setFont("Helvetica-Oblique", 18)
+    c.drawCentredString(width / 2, height - 8 * inch, "Issued with ❤️ by Ayomide")
+    c.drawCentredString(width / 2, height - 8.7 * inch, f"Date: {time.strftime('%B %d, %Y')}")
+
+    # Decorative border
+    c.setStrokeColorRGB(0.9, 0.4, 0.6)
+    c.setLineWidth(8)
+    margin = 0.6 * inch
+    c.rect(margin, margin, width - 2 * margin, height - 2 * margin)
+
+    c.showPage()
+    c.save()
+
+    pdf_bytes = buffer.getvalue()
+    buffer.seek(0)
+
+    # Download button
+    st.download_button(
+        label="📄 Download Official Valentine Certificate (PDF)",
+        data=pdf_bytes,
+        file_name="Valentine_Certificate_Jadesola.pdf",
+        mime="application/pdf"
+    )
+
+    st.caption("ℹ️ Open the PDF in any viewer to see your beautiful certificate!")
