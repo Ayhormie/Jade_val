@@ -138,7 +138,7 @@ if st.session_state.predicted:
     st.subheader("🔐 Private Message (Restricted Access)")
     secret = st.text_input("Enter the secret key to unlock 💖", type="password", key="secret_input")
 
-    # Define message BEFORE the if block (fixes NameError)
+    # Define message BEFORE the if block
     private_message = """
 Jadesola, this isn’t about code, models, or predictions.
 I genuinely enjoy you, admire you, and want to create beautiful memories with you.
@@ -187,11 +187,10 @@ if st.session_state.letter_shown:
     st.balloons()
     st.snow()
 
-    # ── Music Player ──
-    st.caption("🎶 Soft romantic background music (click play if needed)")
+    # ── Music Player ── (FOLA - Caricature)
+    st.caption("🎶 Now playing: FOLA - Caricature 💫 (click play if needed)")
 
-    # Royalty-free romantic piano example
-    music_url = "https://www.fesliyanstudios.com/play-mp3/341"
+    music_url = "https://raw.githubusercontent.com/Ayhormie/Jade_val/main/FOLA-Caricature-(TrendyBeatz.com).mp3"
 
     if st.session_state.music_playing:
         st.audio(music_url, format="audio/mp3", autoplay=False, loop=True)
@@ -269,7 +268,7 @@ if st.session_state.letter_shown:
     c.setFillColorRGB(0.5, 0.5, 0.7)
     c.setFont("Helvetica-Oblique", 18)
     c.drawCentredString(width / 2, height - 8 * inch, "Issued with ❤️ by Ayomide")
-    
+    c.drawCentredString(width / 2, height - 8.7 * inch, f"Date: {time.strftime('%B %d, %Y')}")
 
     # Border
     c.setStrokeColorRGB(0.9, 0.4, 0.6)
