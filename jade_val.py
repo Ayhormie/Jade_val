@@ -3,7 +3,6 @@ import random
 import time
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
-import os
 
 # ---------------- SESSION STATE ----------------
 if "predicted" not in st.session_state:
@@ -101,11 +100,9 @@ if st.session_state.predicted:
     with col2:
         st.button("NO 😅")
 
-
 # ---------------- LOVE LETTER ANIMATION ----------------
 if st.session_state.letter_shown:
     st.success("🥰 Valentine confirmed!")
-
     st.balloons()
     st.snow()
 
@@ -114,10 +111,12 @@ if st.session_state.letter_shown:
     letter = (
         "Dear Jadesola,\n\n"
         "This message may look like plain text, but it’s actually a carefully structured signal originating from the heart layer.\n\n"
-        "our presence has a way of making everything feel lighter, brighter, and more meaningful, simply by being you. You bring joy effortlessly, and that is something I deeply admire.\n"
-        "If permitted, I’d like to allocate Valentine’s Day to us. no unnecessary features, just meaningful execution and memories safely persisted.\n\n"
+        "Your presence has a way of making everything feel lighter, brighter, and more meaningful. You bring joy effortlessly, "
+        "and that is something I deeply admire.\n\n"
+        "If permitted, I’d like to allocate Valentine’s Day to us — no unnecessary features, "
+        "just meaningful execution and memories safely persisted.\n\n"
         "Consistently yours,\n"
-        "Your favorite. Ayomide 💖"
+        "Ayomide 💖"
     )
 
     placeholder = st.empty()
@@ -126,7 +125,7 @@ if st.session_state.letter_shown:
     for char in letter:
         displayed += char
         placeholder.markdown(f"```\n{displayed}\n```")
-        time.sleep(0.04)
+        time.sleep(0.035)
 
     st.divider()
 
@@ -136,5 +135,39 @@ if st.session_state.letter_shown:
         c = canvas.Canvas(file_name, pagesize=A4)
         width, height = A4
 
-        c.setFont("Helvetica-Bold", 24)
-        c.drawCentredString(wi
+        c.setFont("Helvetica-Bold", 26)
+        c.drawCentredString(width / 2, height - 150, "💖 Valentine Certificate 💖")
+
+        c.setFont("Helvetica", 16)
+        c.drawCentredString(width / 2, height - 260, "This certifies that")
+
+        c.setFont("Helvetica-Bold", 22)
+        c.drawCentredString(width / 2, height - 320, "JADESOLA")
+
+        c.setFont("Helvetica", 16)
+        c.drawCentredString(
+            width / 2,
+            height - 380,
+            "has officially accepted to be my Valentine 💘"
+        )
+
+        c.setFont("Helvetica-Oblique", 12)
+        c.drawCentredString(
+            width / 2,
+            height - 470,
+            "Issued with ❤️ by Ayomide (Data Scientist Edition)"
+        )
+
+        c.showPage()
+        c.save()
+        return file_name
+
+    pdf_file = generate_pdf()
+
+    with open(pdf_file, "rb") as f:
+        st.download_button(
+            "📄 Download Valentine Certificate",
+            data=f,
+            file_name="Valentine_Certificate_Jadesola.pdf",
+            mime="application/pdf"
+        )
