@@ -1,9 +1,8 @@
 import streamlit as st
 import random
 import time
-import base64
 from io import BytesIO
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import LETTER   # ← Use uppercase LETTER
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 
@@ -14,6 +13,8 @@ if "accepted" not in st.session_state:
     st.session_state.accepted = False
 if "letter_shown" not in st.session_state:
     st.session_state.letter_shown = False
+if "music_triggered" not in st.session_state:
+    st.session_state.music_triggered = False
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(
@@ -93,6 +94,7 @@ if st.session_state.predicted:
         if st.button("YES 💘"):
             st.session_state.accepted = True
             st.session_state.letter_shown = True
+            st.session_state.music_triggered = True   # ← Trigger music after click
     with col2:
         st.button("NO 😅")
 
@@ -102,20 +104,30 @@ if st.session_state.letter_shown:
     st.balloons()
     st.snow()
 
-    # ── Background Music (soft romantic piano — royalty-free) ────────────────────────────────
-    # Pixabay example — feel free to replace with your favorite direct mp3 link
-    # Autoplay may be blocked until user interacts (normal browser policy)
-    music_url = "https://cdn.pixabay.com/audio/2023/08/07/audio_3d0d6d6d1d.mp3"  # ← example soft romantic piano (replace if desired)
+    # ── Background Music ── (starts after user interaction = YES click)
+    # Royalty-free soft romantic piano loop example from Pixabay
+    # Replace URL with your own if you upload to GitHub repo or external host
+    music_url = "https://cdn.pixabay.com/audio/2023/08/07/audio_3d0d6d6d1d.mp3"
 
-    music_html = f"""
-    <audio autoplay loop style="display: none;">
-        <source src="{music_url}" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-    """
-    st.markdown(music_html, unsafe_allow_html=True)
+    # Hidden autoplay (may work after interaction)
+    if st.session_state.music_triggered:
+        music_html = f"""
+        <audio autoplay loop style="display: none;">
+            <source src="{music_url}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        """
+        st.markdown(music_html, unsafe_allow_html=True)
 
-    st.caption("🎶 Soft romantic background playing... (click anywhere if it doesn't start)")
+    # Visible fallback button (recommended – most reliable)
+    st.caption("🎶 Romantic background music")
+    if st.button("Play / Restart Music 🎵"):
+        st.markdown(f"""
+        <audio autoplay loop>
+            <source src="{music_url}" type="audio/mpeg">
+        </audio>
+        """, unsafe_allow_html=True)
+        st.session_state.music_triggered = True
 
     st.subheader("💌 A Letter For You")
 
@@ -144,8 +156,8 @@ if st.session_state.letter_shown:
 
     # Generate PDF in memory
     buffer = BytesIO()
-    c = canvas.Canvas(buffer, pagesize=letter)
-    width, height = letter  # ~612 × 792 pt
+    c = canvas.Canvas(buffer, pagesize=LETTER)
+    width, height = LETTER  # Safe: LETTER is (612.0, 792.0)
 
     # Light pink background
     c.setFillColorRGB(1.0, 0.96, 0.98)
@@ -188,7 +200,7 @@ if st.session_state.letter_shown:
     c.save()
 
     pdf_bytes = buffer.getvalue()
-    buffer.seek(0)
+    buffer.close()
 
     # Download button
     st.download_button(
@@ -198,4 +210,4 @@ if st.session_state.letter_shown:
         mime="application/pdf"
     )
 
-    st.caption("ℹ️ Open the PDF in any viewer to see your beautiful certificate!")
+    st.caption("ℹ️ Open in any PDF viewer to see your beautiful certificate!")
