@@ -188,7 +188,7 @@ if st.session_state.letter_shown:
     c.setFillColorRGB(0.5, 0.5, 0.7)
     c.setFont("Helvetica-Oblique", 18)
     c.drawCentredString(width / 2, height - 8 * inch, "Issued with ❤️ by Ayomide")
-    c.drawCentredString(width / 2, height - 8.7 * inch, f"Date: {time.strftime('%B %d, %Y')}")
+    
 
     # Decorative border
     c.setStrokeColorRGB(0.9, 0.4, 0.6)
